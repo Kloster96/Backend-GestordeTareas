@@ -8,34 +8,33 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const reportRoutes = require("./routes/reportRoutes");
+
 const app = express();
 
+// ✅ CORS corregido para producción + Vercel
 app.use(
-    cors({
-        origin: process.env.CLIENT_URL || "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"]
-    })
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173", // Frontend URL
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
 );
 
-// Connect DB
-
-connectDB();
-
-// Middleware 
+// ✅ Middleware
 app.use(express.json());
 
-
-// Routes
+// ✅ Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/reports", reportRoutes);
 
+// ✅ Servir archivos subidos
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Start Server
+// ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
