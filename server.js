@@ -12,14 +12,24 @@ const reportRoutes = require("./routes/reportRoutes");
 const app = express();
 
 // ✅ CORS corregido para producción + Vercel
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173", // Frontend URL
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+const allowedOrigins = [
+  process.env.CLIENT_URL || "http://localhost:5173",
+  "https://frontend-gestorde-tareas-9fdc1aqq5-kloster96s-projects.vercel.app"
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // postman o scripts sin origin
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // ✅ Middleware
 app.use(express.json());
