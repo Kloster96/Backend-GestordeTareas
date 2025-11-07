@@ -13,8 +13,9 @@ const app = express();
 
 // ✅ CORS corregido para producción + Vercel
 const allowedOrigins = [
-  process.env.CLIENT_URL || "http://localhost:5173",
-  "https://frontend-gestorde-tareas-9fdc1aqq5-kloster96s-projects.vercel.app"
+  "https://frontend-gestorde-tareas.vercel.app",          // producción
+  "https://frontend-gestorde-tareas-p6iucft1g-kloster96s-projects.vercel.app", // preview
+  "http://localhost:5173"                                  // desarrollo local
 ];
 
 app.use(cors({
