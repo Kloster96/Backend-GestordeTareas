@@ -11,6 +11,9 @@ const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
 
+// ⬅️ Conexión a MongoDB
+connectDB();
+
 // ✅ CORS corregido para producción + Vercel
 const allowedOrigins = [
   "https://frontend-gestorde-tareas.vercel.app",          // producción
