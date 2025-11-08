@@ -16,10 +16,11 @@ connectDB();
 
 // ✅ CORS corregido para producción + Vercel
 const allowedOrigins = [
-  "https://frontend-gestorde-tareas.vercel.app", // si alguna vez lo personalizás
-  "https://frontend-gestorde-tareas-paxukd9yl-kloster96s-projects.vercel.app", // producción real
-  "http://localhost:5173" // desarrollo local
+  "https://frontend-gestorde-tareas.vercel.app",                                // dominio principal ✅
+  "https://frontend-gestorde-tareas-paxukd9yl-kloster96s-projects.vercel.app",  // deployment actual ✅
+  "http://localhost:5173"                                                       // desarrollo local ✅
 ];
+
 
 app.use(cors({
   origin: function(origin, callback) {
