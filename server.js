@@ -4,6 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const connectDB = require("./config/db");
 
+// Rutas
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const taskRoutes = require("./routes/taskRoutes");
@@ -14,20 +15,17 @@ const app = express();
 // ⬅️ Conexión a MongoDB
 connectDB();
 
-// ✅ CORS corregido para producción + Vercel
+// ✅ CORS dinámico para producción + previews Vercel + localhost
 const allowedOrigins = [
-  "https://frontend-gestorde-tareas.vercel.app",                                 // dominio principal
-  "https://frontend-gestorde-tareas-paxukd9yl-kloster96s-projects.vercel.app",   // preview viejo
-  "https://frontend-gestorde-tareas-hfuir9yoz-kloster96s-projects.vercel.app",   // preview nuevo (ESTE FALTABA)
-  "http://localhost:5173"                                                         // local
+  "https://frontend-gestorde-tareas.vercel.app",
+  "http://localhost:5173"
 ];
-
-
 
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // postman o scripts sin origin
-    if (allowedOrigins.includes(origin)) {
+    console.log("Origin request:", origin); // Debug: ver qué origen llega
+    if (!origin) return callback(null, true); // Postman, curl o scripts sin origin
+    if (allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -38,7 +36,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// ✅ Middleware
+// ✅ Middleware para parsear JSON
 app.use(express.json());
 
 // ✅ Rutas
@@ -49,6 +47,14 @@ app.use("/api/reports", reportRoutes);
 
 // ✅ Servir archivos subidos
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// ✅ Manejo global de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error"
+  });
+});
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
